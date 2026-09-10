@@ -1,0 +1,41 @@
+%YAML:1.0
+
+base_config: "base.yaml"
+scene_config: "hm3d_00254_native_v6_scene.yaml"
+
+sdf_iter_step: 5000
+gs_iter_step: 30000
+
+leaf_sizes: 0.08
+bce_sigma: 0.02
+
+camera:
+   model: 0
+   width: 1920
+   height: 1080
+   fx: 1280.0
+   fy: 1280.0
+   cx: 960.0
+   cy: 540.0
+
+extrinsic:
+   T_C_L: !!opencv-matrix
+      rows: 4
+      cols: 4
+      dt: d
+      data: [ 1.0, 0.0, 0.0, 0.0,
+              0.0, 0.0, -1.0, 0.0,
+              0.0, 1.0, 0.0, 0.0,
+              0.0, 0.0, 0.0, 1.0 ]
+
+   T_B_L: !!opencv-matrix
+      rows: 4
+      cols: 4
+      dt: d
+      data: [ 1.0, 0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0, 0.0,
+              0.0, 0.0, 1.0, 0.0,
+              0.0, 0.0, 0.0, 1.0 ]
+
+map:
+   map_size: 25

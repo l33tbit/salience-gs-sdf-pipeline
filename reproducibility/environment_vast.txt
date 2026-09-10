@@ -1,0 +1,8 @@
+host=9c3a3577f561
+Linux 9c3a3577f561 6.8.0-136-generic #136-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul  1 21:53:05 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+cmake version 3.26.4
+Build cuda_11.8.r11.8/compiler.31833905_0
+torch=2.4.1+cu118
+cuda=True
+NVIDIA GeForce RTX 3090, 595.58.03, 24576 MiB

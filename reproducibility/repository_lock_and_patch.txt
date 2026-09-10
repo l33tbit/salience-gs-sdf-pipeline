@@ -1,0 +1,62 @@
+ 43ec748285c0237144c83337d4e0a396d03cf11b include/utils/ply_utils (heads/master)
+ bc813d9341b6523baf45313949f54b0f8e2c0461 submodules/gsplat_cpp (heads/main)
+ 9aac9d108ef06ce79baa6867d31335c753320719 submodules/kaolin_wisp_cpp (heads/main)
+ cd03563e379f2d719cee732012cbb016d966b7a1 submodules/llog (heads/master)
+ 83e907c6fdc33752be0bdd0e906e7fc5968d4109 submodules/simple-knn (heads/main)
+ 64cf5c5766f5496643b4d4c6dff32372071e4e64 submodules/tcnn_binding (heads/main)
+a7372eb911f3d92a0200c6989ba131072622e3fd
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b4e159..de81438 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,6 +74,11 @@ include_directories(submodules/llog/include)
+ 
+ # 指定libTorch位置
+ find_package(Torch REQUIRED)
++# Vast Ubuntu/OpenCV/PCL use the C++11 ABI; the Torch interface injects ABI=0
++# into targets, so explicitly append ABI=1 for this official build.
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=1")
++set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=1")
++set_property(TARGET torch PROPERTY INTERFACE_COMPILE_OPTIONS "-D_GLIBCXX_USE_CXX11_ABI=1")
+ 
+ include_directories(${OpenCV_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR}
+                     ${PCL_INCLUDE_DIRS} include)
+@@ -159,6 +164,9 @@ target_link_libraries(neural_mapping_lib data_loader optimizer neural_net
+ 
+ add_executable(neural_mapping_node src/neural_mapping_node.cpp)
+ target_link_libraries(neural_mapping_node neural_mapping_lib)
++# Vast/CMake static-link fix: upstream transitive static dependencies are
++# emitted after neural_mapping_lib so static symbols resolve.
++target_link_libraries(neural_mapping_node ${OpenCV_LIBS} ${PCL_LIBRARIES} llog /usr/lib/x86_64-linux-gnu/libffi.so.7)
+ if(ENABLE_BACKWARD AND NOT WIN32 AND DW_LIBRARY)
+   target_link_libraries(neural_mapping_node ${DW_LIBRARY})
+ endif()
+diff --git a/include/data_loader/data_parsers/base_parser.cpp b/include/data_loader/data_parsers/base_parser.cpp
+index f236606..5dd985f 100644
+--- a/include/data_loader/data_parsers/base_parser.cpp
++++ b/include/data_loader/data_parsers/base_parser.cpp
+@@ -973,7 +973,7 @@ void DataParser::load_depths(const DepthType& depth_type,
+           train_depth_pack_.xyz.index_put_({i}, xyz);
+           train_depth_pack_.origin.index_put_({i}, pos.view({1, 3}));
+ 
+-          train_depth_poses_.index_put_({i - i / 8}, pose);
++          train_depth_poses_.index_put_({i}, pose);
+           train_depth_filelists_[i] = raw_depth_filelists_[i];
+         }
+       }
+diff --git a/include/data_loader/data_parsers/rosbag_parser.hpp b/include/data_loader/data_parsers/rosbag_parser.hpp
+index 6014d4b..9a50a73 100644
+--- a/include/data_loader/data_parsers/rosbag_parser.hpp
++++ b/include/data_loader/data_parsers/rosbag_parser.hpp
+@@ -313,9 +313,9 @@ struct Rosbag : DataParser {
+     depth_poses_ = std::get<0>(load_poses(depth_pose_path_, false, 0));
+     TORCH_CHECK(depth_poses_.size(0) > 0);
+ 
+-    load_colors(".png", "", false, true);
++    load_colors(".png", "", false, false);
+     TORCH_CHECK(color_poses_.size(0) == raw_color_filelists_.size());
+-    load_depths(depth_type_, "", false, true);
++    load_depths(depth_type_, "", false, false);
+     TORCH_CHECK(depth_poses_.size(0) == raw_depth_filelists_.size());
+   }
+ 
