@@ -11,5 +11,10 @@
 - RGB QA: 3,505 images, bad frames 0, minimum mean 130.1109, minimum non-black 0.86889, minimum unique colors 1,037
 - GPU QA benchmark: exact CPU semantics retained; CUDA batch benchmark was only 1.09x faster and differed at floating-point precision, so authoritative CPU QA was not replaced
 - Training controls: official 5,000 SDF iterations and 30,000 Gaussian iterations
+- Vast-built image: `ghcr.io/l33tbit/salience-gs-sdf-pipeline:vast-cuda118-full-20260910`
+- Immutable image digest: `sha256:8abb349ee938765f6e4edd71c7b8ee999ff5e426645861b7f665ce3e54abf791`
+- Runtime layer digest: `sha256:b5645e5ea0f183d6760dabab475ffb7d3845339a8ead95cfec2afda2e3ca421d`
+- Image build location: Vast instance `50420912`; image pull verification was performed on Vast
+- Image contents exclude scene data, RGB/depth/LiDAR, checkpoints, and trained outputs; those remain on Drive
 
 The full capture tree, checkpoints, logs, and eventual export remain on Drive.

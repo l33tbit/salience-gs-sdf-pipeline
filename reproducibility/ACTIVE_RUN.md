@@ -8,3 +8,4 @@
 - Current training input: Drive checkpoint's fixed-720 derived adapter
 - No credentials are included in this repository
 - Large data and results: Drive under the capture_002 checkpoint tree
+- Proven runtime image: `ghcr.io/l33tbit/salience-gs-sdf-pipeline@sha256:8abb349ee938765f6e4edd71c7b8ee999ff5e426645861b7f665ce3e54abf791`

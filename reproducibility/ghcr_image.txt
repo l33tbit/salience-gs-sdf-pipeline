@@ -1,0 +1,8 @@
+image=ghcr.io/l33tbit/salience-gs-sdf-pipeline:vast-cuda118-full-20260910
+digest=sha256:8abb349ee938765f6e4edd71c7b8ee999ff5e426645861b7f665ce3e54abf791
+base_image=pytorch/pytorch:2.1.0-cuda11.8-cudnn8-devel
+base_digest=sha256:558b78b9a624969d54af2f13bf03fbad27907dbb6f09973ef4415d6ea24c80d9
+runtime_layer_digest=sha256:b5645e5ea0f183d6760dabab475ffb7d3845339a8ead95cfec2afda2e3ca421d
+platform=linux/amd64
+built_on_vast=true
+datasets_checkpoints_results_in_image=false
